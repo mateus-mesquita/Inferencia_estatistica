@@ -1,0 +1,90 @@
+---
+title: "R Notebook"
+output:
+  html_notebook: default
+  pdf_document: default
+---
+
+Lista 3 - R
+
+1. Uma amostra de tamanho 100 forneceu peso médio da matéria seca da parte áerea
+(g) do mamoeiro em solo inoculado com fungos G. etunicatum e adubado com 20 mg/l
+de P2CO3 de 5,78 g com desvio padrão de 1,28 g.
+
+a) Estime o peso médio da matéria seca com 98% de confiança
+
+```{r}
+
+IC.NORM <- function(alfa, amostra, media, dp){
+  # Calcula o erro padrão
+  erro_padrao = dp/sqrt(amostra)  
+  
+  # Calcula o valor do quantil superior (1 - alfa/2)
+  limite_superior = qnorm(1-alfa/2)
+  
+  # Calcula o valor do quantil inferior (alfa/2)
+  limite_inferior = qnorm(1-(1-alfa/2))
+  
+  # Calcula o intervalo de confiança e retorna como um vetor nomeado
+  resultado = c('l1' = media + limite_inferior*erro_padrao, 'l2' = media + limite_superior*erro_padrao)
+  return(resultado)
+}
+
+```
+
+Calculando o interval de confiança:
+```{r}
+# Intervalo de confiança
+# amostra de n = 100
+# média = 5,78 g
+# desvio padrão = 1,28 g
+
+IC.NORM(0.02,100,5.78,1.28)
+```
+b) Qual o valor do erro nas suas estimativas?
+
+Construindo função para calcular a margem de erro:
+```{r}
+
+M.erro <- function(alfa, amostra, dp){
+  # Calcula a margem de erro utilizando o erro padrão e o quantil normal
+  margem_de_erro = dp/sqrt(amostra) * qnorm(1-alfa/2)
+  
+  # Retorna a margem de erro calculada
+  return(margem_de_erro)
+}
+
+```
+
+Calculando a margem de erro:
+```{r}
+# Calculando a margem de erro para 0.02
+M.erro(0.02,100,1.28)
+```
+
+c) Suponha que o pesquisador deseje cometer um erro de apenas 0,20 g na estimativa
+com 95% de confiança no seu intervalo. De que tamanho deverá ser a nova amostra?
+
+Essa não é a melhor maneira para se resolver esse problema, mas é podemos responder essa pergunta usando o que já foi feito com um pouco de programação.
+
+primeiro vamos observar o erro padrão para um intervalo de confiança de 95%
+```{r}
+round(M.erro(0.05,100,1.28),2) # arredondando para duas casas decimais
+```
+Encontrando o tamanho da amostra deseja:
+```{r}
+i = 100  # Tamanho da amostra no problema
+while(TRUE){
+  # Verifica se a margem de erro calculada é igual a 0.20
+  if(round(M.erro(0.05,i,1.28),2) == 0.20){
+    # Se for 0.20, imprime o tamanho da amostra e a margem de erro
+    cat("O tamanho da amostra para uma margem de erro de 0,20 g é",i,"\n")
+    cat("Margem de erro:",round(M.erro(0.05,i,1.28),2),"\n")
+    break  # Interrompe o loop
+  } else{
+    # Se não for 0.20, aumenta o tamanho da amostra e tenta novamente
+    i = i + 1
+  }
+}
+
+```
