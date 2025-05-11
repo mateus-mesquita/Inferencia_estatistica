@@ -8,7 +8,7 @@ def IC_T(dados, conf=0.95):
     t_dist = t(len(dados) - 1)
 
     # Calcula o valor crítico t para o nível de confiança
-    t_alfa = t_dist.ppf(1 - conf / 2)
+    t_alfa = t_dist.ppf(1-(1 - conf)/ 2)
 
     # Calcula o erro médio (erro padrão da média) usando o desvio padrão amostral
     em = erro_medio(np.std(dados, ddof=1), len(dados))
@@ -24,7 +24,7 @@ def IC_T_(media, n, dp, conf=0.95):
     t_dist = t(n - 1)
 
     # Calcula o valor crítico t
-    t_alfa = t_dist.ppf(1 - conf / 2)
+    t_alfa = t_dist.ppf(1-(1 - conf)/ 2)
 
     # Calcula o erro médio (erro padrão da média)
     em = erro_medio(dp, n)
