@@ -10,7 +10,7 @@ def IC_Normal(dados, conf=0.95):
     Normal = norm(loc=0, scale=1)
 
     # Calcula o valor crítico z para o nível de confiança
-    z = Normal.ppf(1 - conf / 2)
+    z = Normal.ppf(1- (1 - conf)/ 2)
 
     # Calcula o erro padrão da média usando desvio padrão amostral
     em = erro_medio(np.std(dados, ddof=1), len(dados))
@@ -34,7 +34,7 @@ def IC_normal_(n, media, dp, conf=0.95):
     Normal = norm(loc=0, scale=1)
 
     # Calcula o valor crítico z
-    z = Normal.ppf(1 - conf / 2)
+    z = Normal.ppf(1 - (1 - conf)/ 2)
 
     # Calcula o erro padrão da média
     em = erro_medio(dp, n)
